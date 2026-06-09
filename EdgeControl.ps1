@@ -344,10 +344,10 @@ $footer.Location  = [Drawing.Point]::new(0, 751)
 $footer.BackColor = $PANEL
 $form.Controls.Add($footer)
 
-$btnSelectAll = New-FlatButton "Sel. todo"  ([Drawing.Point]::new(16,  16)) ([Drawing.Size]::new(100, 32)) ([Drawing.Color]::FromArgb(140, 140, 140))
-$btnApply     = New-FlatButton "Aplicar"    ([Drawing.Point]::new(126, 16)) ([Drawing.Size]::new(100, 32)) $GREEN
-$btnReset     = New-FlatButton "Deselect."  ([Drawing.Point]::new(236, 16)) ([Drawing.Size]::new(100, 32)) $RED
-$btnUpdate    = New-FlatButton "Actualizar" ([Drawing.Point]::new(346, 16)) ([Drawing.Size]::new(100, 32)) ([Drawing.Color]::FromArgb(80, 160, 240))
+$btnSelectAll = New-FlatButton "Sel. todo"  ([Drawing.Point]::new(16,  12)) ([Drawing.Size]::new(100, 32)) ([Drawing.Color]::FromArgb(140, 140, 140))
+$btnApply     = New-FlatButton "Aplicar"    ([Drawing.Point]::new(126, 12)) ([Drawing.Size]::new(100, 32)) $GREEN
+$btnReset     = New-FlatButton "Deselect."  ([Drawing.Point]::new(236, 12)) ([Drawing.Size]::new(100, 32)) $RED
+$btnUpdate    = New-FlatButton "Actualizar" ([Drawing.Point]::new(346, 12)) ([Drawing.Size]::new(100, 32)) ([Drawing.Color]::FromArgb(80, 160, 240))
 $footer.Controls.AddRange(@($btnSelectAll, $btnApply, $btnReset, $btnUpdate))
 
 # Barra de estado
