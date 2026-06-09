@@ -24,6 +24,7 @@ Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # ─── Constantes ──────────────────────────────────────────────────────────────
 $REG_PATH  = "HKLM:\SOFTWARE\Policies\Microsoft\Edge"
+$APP_TITLE = "EdgeControl - dprojects.org"
 
 $DARK   = [Drawing.Color]::FromArgb(13, 13, 13)
 $PANEL  = [Drawing.Color]::FromArgb(22, 22, 22)
