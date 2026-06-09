@@ -234,7 +234,7 @@ $form.Controls.Add($sepTop)
 # ── Panel scrollable de politicas ──
 $scrollPanel = [Windows.Forms.Panel]::new()
 $scrollPanel.Location   = [Drawing.Point]::new(0, 53)
-$scrollPanel.Size       = [Drawing.Size]::new(480, 747)
+$scrollPanel.Size       = [Drawing.Size]::new(480, 727)
 $scrollPanel.BackColor  = $DARK
 $scrollPanel.AutoScroll = $true
 $form.Controls.Add($scrollPanel)
@@ -333,31 +333,31 @@ foreach ($group in $GROUPS.Keys) {
 # Separador inferior
 $sepBottom = [Windows.Forms.Panel]::new()
 $sepBottom.Size      = [Drawing.Size]::new(480, 1)
-$sepBottom.Location  = [Drawing.Point]::new(0, 800)
+$sepBottom.Location  = [Drawing.Point]::new(0, 780)
 $sepBottom.BackColor = $BORDER
 $form.Controls.Add($sepBottom)
 
 # ── Footer / Botones ──
 $footer = [Windows.Forms.Panel]::new()
-$footer.Size      = [Drawing.Size]::new(480, 80)
-$footer.Location  = [Drawing.Point]::new(0, 801)
+$footer.Size      = [Drawing.Size]::new(480, 100)
+$footer.Location  = [Drawing.Point]::new(0, 781)
 $footer.BackColor = $PANEL
 $form.Controls.Add($footer)
 
-$btnSelectAll = New-FlatButton "Sel. todo"  ([Drawing.Point]::new(16,  12)) ([Drawing.Size]::new(100, 32)) ([Drawing.Color]::FromArgb(140, 140, 140))
-$btnApply     = New-FlatButton "Aplicar"    ([Drawing.Point]::new(126, 12)) ([Drawing.Size]::new(100, 32)) $GREEN
-$btnReset     = New-FlatButton "Deselect."  ([Drawing.Point]::new(236, 12)) ([Drawing.Size]::new(100, 32)) $RED
-$btnUpdate    = New-FlatButton "Actualizar" ([Drawing.Point]::new(346, 12)) ([Drawing.Size]::new(100, 32)) ([Drawing.Color]::FromArgb(80, 160, 240))
+$btnSelectAll = New-FlatButton "Sel. todo"  ([Drawing.Point]::new(16,  12)) ([Drawing.Size]::new(95, 28)) ([Drawing.Color]::FromArgb(140, 140, 140))
+$btnApply     = New-FlatButton "Aplicar"    ([Drawing.Point]::new(121, 12)) ([Drawing.Size]::new(95, 28)) $GREEN
+$btnReset     = New-FlatButton "Deselect."  ([Drawing.Point]::new(226, 12)) ([Drawing.Size]::new(95, 28)) $RED
+$btnUpdate    = New-FlatButton "Actualizar" ([Drawing.Point]::new(331, 12)) ([Drawing.Size]::new(95, 28)) ([Drawing.Color]::FromArgb(80, 160, 240))
 $footer.Controls.AddRange(@($btnSelectAll, $btnApply, $btnReset, $btnUpdate))
 
-# Barra de estado
+# Barra de estado dentro del footer
 $script:status = [Windows.Forms.Label]::new()
-$script:status.Location  = [Drawing.Point]::new(16, 885)
+$script:status.Location  = [Drawing.Point]::new(16, 56)
 $script:status.Size      = [Drawing.Size]::new(450, 14)
 $script:status.ForeColor = $MUTED
 $script:status.Font      = $FONT_SMALL
 $script:status.Text      = "Listo. Ejecuta 'Actualizar' para cargar el estado actual del registro."
-$form.Controls.Add($script:status)
+$footer.Controls.Add($script:status)
 
 # ── Cargar estado inicial ──
 Update-CurrentState
