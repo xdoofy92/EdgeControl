@@ -193,13 +193,6 @@ $header.Location  = [Drawing.Point]::new(0, 0)
 $header.BackColor = $PANEL
 $form.Controls.Add($header)
 
-# Rectangulo decorativo (acento azul Edge)
-$accent_bar = [Windows.Forms.Panel]::new()
-$accent_bar.Size      = [Drawing.Size]::new(4, 48)
-$accent_bar.Location  = [Drawing.Point]::new(0, 0)
-$accent_bar.BackColor = $ACCENT
-$header.Controls.Add($accent_bar)
-
 $lblTitle = [Windows.Forms.Label]::new()
 $lblTitle.Text      = "EdgeControl"
 $lblTitle.Font      = $FONT_TITLE
@@ -226,16 +219,16 @@ $header.Controls.Add($lblVer)
 
 # Separador cabecera
 $sepTop = [Windows.Forms.Panel]::new()
-$sepTop.Size      = [Drawing.Size]::new(420, 1)
-$sepTop.Location  = [Drawing.Point]::new(0, 48)
+$sepTop.Size      = [Drawing.Size]::new(386, 1)
+$sepTop.Location  = [Drawing.Point]::new(16, 58)
 $sepTop.BackColor = $BORDER
 $form.Controls.Add($sepTop)
 
 # ── Panel scrollable de politicas ──
 $scrollPanel = [Windows.Forms.Panel]::new()
-$scrollPanel.Location   = [Drawing.Point]::new(0, 49)
-$scrollPanel.Size       = [Drawing.Size]::new(420, 420)
-$scrollPanel.BackColor  = $DARK
+$scrollPanel.Location   = [Drawing.Point]::new(16, 60)
+$scrollPanel.Size       = [Drawing.Size]::new(386, 420)
+$scrollPanel.BackColor  = $PANEL
 $scrollPanel.AutoScroll = $true
 $form.Controls.Add($scrollPanel)
 
@@ -249,7 +242,7 @@ foreach ($group in $GROUPS.Keys) {
 
     # ── Cabecera de grupo ──
     $groupPanel = [Windows.Forms.Panel]::new()
-    $groupPanel.Size      = [Drawing.Size]::new(404, 26)
+    $groupPanel.Size      = [Drawing.Size]::new(370, 26)
     $groupPanel.Location  = [Drawing.Point]::new(8, $yGlobal)
     $groupPanel.BackColor = [Drawing.Color]::FromArgb(26, 26, 26)
     $scrollPanel.Controls.Add($groupPanel)
@@ -276,7 +269,7 @@ foreach ($group in $GROUPS.Keys) {
         # Fila alternante
         $rowBg = if (($script:checks.Count % 2) -eq 0) { $PANEL } else { $PANEL2 }
         $row = [Windows.Forms.Panel]::new()
-        $row.Size      = [Drawing.Size]::new(404, 40)
+        $row.Size      = [Drawing.Size]::new(370, 40)
         $row.Location  = [Drawing.Point]::new(8, $yGlobal)
         $row.BackColor = $rowBg
         $scrollPanel.Controls.Add($row)
@@ -300,7 +293,7 @@ foreach ($group in $GROUPS.Keys) {
         $lbl = [Windows.Forms.Label]::new()
         $lbl.Text      = $name
         $lbl.Location  = [Drawing.Point]::new(34, 6)
-        $lbl.Size      = [Drawing.Size]::new(340, 16)
+        $lbl.Size      = [Drawing.Size]::new(320, 16)
         $lbl.ForeColor = $FG
         $lbl.Font      = $FONT_BODY
         $lbl.Cursor    = [Windows.Forms.Cursors]::Hand
@@ -313,7 +306,7 @@ foreach ($group in $GROUPS.Keys) {
         $desc = [Windows.Forms.Label]::new()
         $desc.Text      = $p.Desc
         $desc.Location  = [Drawing.Point]::new(34, 24)
-        $desc.Size      = [Drawing.Size]::new(380, 14)
+        $desc.Size      = [Drawing.Size]::new(350, 14)
         $desc.ForeColor = $MUTED
         $desc.Font      = $FONT_SMALL
         $row.Controls.Add($desc)
@@ -332,23 +325,16 @@ foreach ($group in $GROUPS.Keys) {
 
 # Separador inferior
 $sepBottom = [Windows.Forms.Panel]::new()
-$sepBottom.Size      = [Drawing.Size]::new(420, 1)
-$sepBottom.Location  = [Drawing.Point]::new(0, 469)
+$sepBottom.Size      = [Drawing.Size]::new(386, 1)
+$sepBottom.Location  = [Drawing.Point]::new(16, 480)
 $sepBottom.BackColor = $BORDER
 $form.Controls.Add($sepBottom)
 
-# ── Footer / Botones ──
-$footer = [Windows.Forms.Panel]::new()
-$footer.Size      = [Drawing.Size]::new(420, 64)
-$footer.Location  = [Drawing.Point]::new(0, 470)
-$footer.BackColor = $PANEL
-$form.Controls.Add($footer)
-
-$btnSelectAll = New-FlatButton "Sel. todo"  ([Drawing.Point]::new(16,  16)) ([Drawing.Size]::new(90, 30)) ([Drawing.Color]::FromArgb(140, 140, 140))
-$btnApply     = New-FlatButton "Aplicar"    ([Drawing.Point]::new(116, 16)) ([Drawing.Size]::new(90, 30)) $GREEN
-$btnReset     = New-FlatButton "Deselect."  ([Drawing.Point]::new(216, 16)) ([Drawing.Size]::new(90, 30)) $RED
-$btnUpdate    = New-FlatButton "Actualizar" ([Drawing.Point]::new(316, 16)) ([Drawing.Size]::new(90, 30)) ([Drawing.Color]::FromArgb(80, 160, 240))
-$footer.Controls.AddRange(@($btnSelectAll, $btnApply, $btnReset, $btnUpdate))
+# ── Botones ──
+$btnSelectAll = New-FlatButton "Sel. todo"  ([Drawing.Point]::new(60,  500)) ([Drawing.Size]::new(90, 30)) ([Drawing.Color]::FromArgb(140, 140, 140))
+$btnApply     = New-FlatButton "Aplicar"    ([Drawing.Point]::new(160, 500)) ([Drawing.Size]::new(90, 30)) $GREEN
+$btnReset     = New-FlatButton "Deselect."  ([Drawing.Point]::new(260, 500)) ([Drawing.Size]::new(90, 30)) $RED
+$form.Controls.AddRange(@($btnSelectAll, $btnApply, $btnReset))
 
 # Barra de estado
 $script:status = [Windows.Forms.Label]::new()
@@ -356,7 +342,7 @@ $script:status.Location  = [Drawing.Point]::new(16, 540)
 $script:status.Size      = [Drawing.Size]::new(386, 16)
 $script:status.ForeColor = $MUTED
 $script:status.Font      = [Drawing.Font]::new("Segoe UI", 7.5)
-$script:status.Text      = "Listo. Ejecuta 'Actualizar' para cargar el estado actual del registro."
+$script:status.Text      = "Listo."
 $form.Controls.Add($script:status)
 
 # ── Cargar estado inicial ──
@@ -366,7 +352,7 @@ Update-CurrentState
 $btnSelectAll.Add_Click({
     foreach ($cb in $script:checks.Values) { $cb.Checked = $true }
     $script:status.ForeColor = $MUTED
-    $script:status.Text = "Todas las politicas seleccionadas. Haz clic en 'Aplicar' para confirmar."
+    $script:status.Text = "Todas las politicas seleccionadas."
 })
 
 $btnReset.Add_Click({
@@ -384,12 +370,6 @@ $btnApply.Add_Click({
     $msg += ". Reinicia Microsoft Edge para que surtan efecto."
     $script:status.ForeColor = $GREEN
     $script:status.Text = $msg
-})
-
-$btnUpdate.Add_Click({
-    Update-CurrentState
-    $script:status.ForeColor = $MUTED
-    $script:status.Text = "Estado actualizado desde el registro."
 })
 
 [void]$form.ShowDialog()
