@@ -1,4 +1,3 @@
-# EdgeControl v0.1 - dprojects.org
 # Herramienta grafica para gestionar politicas de Microsoft Edge via registro de Windows
 # Autor: xdoofy92 | https://github.com/xdoofy92
 
@@ -25,7 +24,6 @@ Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # ─── Constantes ──────────────────────────────────────────────────────────────
 $REG_PATH  = "HKLM:\SOFTWARE\Policies\Microsoft\Edge"
-$APP_TITLE = "EdgeControl v0.1 - dprojects.org"
 
 $DARK   = [Drawing.Color]::FromArgb(13, 13, 13)
 $PANEL  = [Drawing.Color]::FromArgb(22, 22, 22)
@@ -209,13 +207,6 @@ $lblSub.Location  = [Drawing.Point]::new(20, 34)
 $lblSub.AutoSize  = $true
 $header.Controls.Add($lblSub)
 
-$lblVer = [Windows.Forms.Label]::new()
-$lblVer.Text      = "v0.1 | dprojects.org"
-$lblVer.Font      = $FONT_SMALL
-$lblVer.ForeColor = $MUTED
-$lblVer.Location  = [Drawing.Point]::new(360, 34)
-$lblVer.AutoSize  = $true
-$header.Controls.Add($lblVer)
 
 # Separador cabecera
 $sepTop = [Windows.Forms.Panel]::new()
