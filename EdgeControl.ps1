@@ -234,7 +234,7 @@ $form.Controls.Add($sepTop)
 # ── Panel scrollable de politicas ──
 $scrollPanel = [Windows.Forms.Panel]::new()
 $scrollPanel.Location   = [Drawing.Point]::new(0, 53)
-$scrollPanel.Size       = [Drawing.Size]::new(462, 747)
+$scrollPanel.Size       = [Drawing.Size]::new(480, 747)
 $scrollPanel.BackColor  = $DARK
 $scrollPanel.AutoScroll = $true
 $form.Controls.Add($scrollPanel)
