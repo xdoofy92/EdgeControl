@@ -193,17 +193,17 @@ $form.Controls.Add($header)
 
 $lblTitle = [Windows.Forms.Label]::new()
 $lblTitle.Text      = "EdgeControl"
-$lblTitle.Font      = $FONT_TITLE
+$lblTitle.Font      = [Drawing.Font]::new("Segoe UI", 13, [Drawing.FontStyle]::Bold)
 $lblTitle.ForeColor = $ACCENT
-$lblTitle.Location  = [Drawing.Point]::new(20, 10)
+$lblTitle.Location  = [Drawing.Point]::new(20, 12)
 $lblTitle.AutoSize  = $true
 $header.Controls.Add($lblTitle)
 
 $lblSub = [Windows.Forms.Label]::new()
 $lblSub.Text      = "Politicas de Microsoft Edge via registro"
-$lblSub.Font      = $FONT_SMALL
+$lblSub.Font      = [Drawing.Font]::new("Segoe UI", 8)
 $lblSub.ForeColor = $MUTED
-$lblSub.Location  = [Drawing.Point]::new(20, 34)
+$lblSub.Location  = [Drawing.Point]::new(145, 18)
 $lblSub.AutoSize  = $true
 $header.Controls.Add($lblSub)
 
