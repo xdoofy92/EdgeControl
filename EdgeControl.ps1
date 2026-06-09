@@ -178,7 +178,7 @@ function Set-Policies {
 # ─── Construccion de UI ───────────────────────────────────────────────────────
 $form = [Windows.Forms.Form]::new()
 $form.Text            = $APP_TITLE
-$form.Size            = [Drawing.Size]::new(480, 680)
+$form.Size            = [Drawing.Size]::new(480, 720)
 $form.StartPosition   = "CenterScreen"
 $form.BackColor       = $DARK
 $form.ForeColor       = $FG
@@ -234,7 +234,7 @@ $form.Controls.Add($sepTop)
 # ── Panel scrollable de politicas ──
 $scrollPanel = [Windows.Forms.Panel]::new()
 $scrollPanel.Location   = [Drawing.Point]::new(0, 53)
-$scrollPanel.Size       = [Drawing.Size]::new(462, 560)
+$scrollPanel.Size       = [Drawing.Size]::new(462, 583)
 $scrollPanel.BackColor  = $DARK
 $scrollPanel.AutoScroll = $true
 $form.Controls.Add($scrollPanel)
@@ -333,14 +333,14 @@ foreach ($group in $GROUPS.Keys) {
 # Separador inferior
 $sepBottom = [Windows.Forms.Panel]::new()
 $sepBottom.Size      = [Drawing.Size]::new(480, 1)
-$sepBottom.Location  = [Drawing.Point]::new(0, 613)
+$sepBottom.Location  = [Drawing.Point]::new(0, 636)
 $sepBottom.BackColor = $BORDER
 $form.Controls.Add($sepBottom)
 
 # ── Footer / Botones ──
 $footer = [Windows.Forms.Panel]::new()
 $footer.Size      = [Drawing.Size]::new(480, 64)
-$footer.Location  = [Drawing.Point]::new(0, 614)
+$footer.Location  = [Drawing.Point]::new(0, 637)
 $footer.BackColor = $PANEL
 $form.Controls.Add($footer)
 
@@ -352,7 +352,7 @@ $footer.Controls.AddRange(@($btnSelectAll, $btnApply, $btnReset, $btnUpdate))
 
 # Barra de estado
 $script:status = [Windows.Forms.Label]::new()
-$script:status.Location  = [Drawing.Point]::new(16, 636)
+$script:status.Location  = [Drawing.Point]::new(16, 703)
 $script:status.Size      = [Drawing.Size]::new(450, 14)
 $script:status.ForeColor = $MUTED
 $script:status.Font      = $FONT_SMALL
