@@ -333,14 +333,14 @@ foreach ($group in $GROUPS.Keys) {
 # Separador inferior
 $sepBottom = [Windows.Forms.Panel]::new()
 $sepBottom.Size      = [Drawing.Size]::new(480, 1)
-$sepBottom.Location  = [Drawing.Point]::new(0, 716)
+$sepBottom.Location  = [Drawing.Point]::new(0, 766)
 $sepBottom.BackColor = $BORDER
 $form.Controls.Add($sepBottom)
 
 # ── Footer / Botones ──
 $footer = [Windows.Forms.Panel]::new()
 $footer.Size      = [Drawing.Size]::new(480, 64)
-$footer.Location  = [Drawing.Point]::new(0, 717)
+$footer.Location  = [Drawing.Point]::new(0, 767)
 $footer.BackColor = $PANEL
 $form.Controls.Add($footer)
 
@@ -352,7 +352,7 @@ $footer.Controls.AddRange(@($btnSelectAll, $btnApply, $btnReset, $btnUpdate))
 
 # Barra de estado
 $script:status = [Windows.Forms.Label]::new()
-$script:status.Location  = [Drawing.Point]::new(16, 783)
+$script:status.Location  = [Drawing.Point]::new(16, 833)
 $script:status.Size      = [Drawing.Size]::new(450, 14)
 $script:status.ForeColor = $MUTED
 $script:status.Font      = $FONT_SMALL
