@@ -67,43 +67,46 @@ $W_TXT = $X_TOG - $X_TXT - 10
 
 if (-not (Test-Path $REG_PATH)) { New-Item $REG_PATH -Force | Out-Null }
 
-# ─── Caracteristicas a deshabilitar (listado unico, estilo debloat) ──────────
+# ─── Caracteristicas (listado unico, estilo debloat) ─────────────────────────
+# Logica: el toggle refleja el estado de la caracteristica.
+#   ON  (verde) = activada (estado normal)        Off = valor "activado" / no configurada
+#   OFF (gris)  = se desactivara al pulsar Aplicar  -> escribe Val en el registro
 # Formato: Nombre = @{ Key; Val=valor desactivado; Opp=valor activado; T=tipo; Desc }
 $POLICIES = [ordered]@{
-    "Copilot (IA integrada)"              = @{ Key = "CopilotEnabled";                        Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el asistente Copilot de Edge" }
-    "Copilot en barra de direcciones"     = @{ Key = "CopilotAddressBarSuggestionsEnabled";   Val = 0; Opp = 1; T = "DWord"; Desc = "Elimina sugerencias de Copilot en la barra de URL" }
-    "IA generativa en busqueda"           = @{ Key = "GenAIDefaultSettings";                  Val = 2; Opp = 1; T = "DWord"; Desc = "Bloquea funciones generativas de IA en busqueda" }
-    "Feed de noticias (Nueva pestana)"    = @{ Key = "NewTabPageContentEnabled";              Val = 0; Opp = 1; T = "DWord"; Desc = "Bloquea el feed de noticias y contenido de Microsoft en NTP" }
-    "Imagen del dia (fondo NTP)"          = @{ Key = "NewTabPageAllowedBackgroundTypes";      Val = 1; Opp = 0; T = "DWord"; Desc = "Desactiva la imagen de fondo del dia en la pestana nueva" }
-    "Pantalla de bienvenida (1er inicio)" = @{ Key = "HideFirstRunExperience";                Val = 1; Opp = 0; T = "DWord"; Desc = "Oculta la experiencia de bienvenida al primer inicio" }
-    "Sugerencias trending en barra URL"   = @{ Key = "AddressBarTrendingSuggestEnabled";      Val = 0; Opp = 1; T = "DWord"; Desc = "Elimina tendencias de Bing en la barra de direcciones" }
-    "Sugerencias Work Search (barra URL)" = @{ Key = "AddressBarWorkSearchResultsEnabled";    Val = 0; Opp = 1; T = "DWord"; Desc = "Elimina resultados de busqueda laboral en barra URL" }
-    "Telemetria y datos de diagnostico"   = @{ Key = "DiagnosticData";                        Val = 0; Opp = 2; T = "DWord"; Desc = "Desactiva el envio de datos de uso y diagnostico" }
-    "Personalizacion de anuncios/datos"   = @{ Key = "PersonalizationReportingEnabled";       Val = 0; Opp = 1; T = "DWord"; Desc = "No envia datos de navegacion para personalizar anuncios/servicios" }
-    "Actualizacion de componentes"        = @{ Key = "ComponentUpdatesEnabled";               Val = 0; Opp = 1; T = "DWord"; Desc = "Bloquea la actualizacion automatica de componentes internos" }
-    "Mejorar busqueda/navegacion (datos)" = @{ Key = "SearchSuggestEnabled";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva sugerencias de busqueda (envian datos a Bing)" }
-    "Seguimiento de navegacion (Bing)"    = @{ Key = "ConfigureDoNotTrack";                   Val = 1; Opp = 0; T = "DWord"; Desc = "Activa Do Not Track para todos los sitios" }
-    "Sincronizacion de navegacion"        = @{ Key = "SyncDisabled";                          Val = 1; Opp = 0; T = "DWord"; Desc = "Desactiva la sincronizacion con cuenta Microsoft" }
-    "Autocompletar formularios"           = @{ Key = "AutofillAddressEnabled";                Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el autocompletado de direcciones" }
-    "Autocompletar tarjetas"              = @{ Key = "AutofillCreditCardEnabled";             Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el guardado de tarjetas de credito" }
-    "Historial de navegacion en sync"     = @{ Key = "SavingBrowserHistoryDisabled";          Val = 1; Opp = 0; T = "DWord"; Desc = "Impide que Edge guarde el historial de navegacion" }
-    "Perfil no removible (MSA)"           = @{ Key = "NonRemovableProfileEnabled";            Val = 0; Opp = 1; T = "DWord"; Desc = "Evita perfiles no removibles con cuenta Microsoft" }
-    "Forzar inicio de sesion"             = @{ Key = "BrowserSignin";                         Val = 0; Opp = 2; T = "DWord"; Desc = "Desactiva el inicio de sesion en el navegador" }
-    "Compras y cupones (Shopping)"        = @{ Key = "EdgeShoppingAssistantEnabled";          Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el asistente de compras integrado de Edge" }
-    "Microsoft Rewards en Edge"           = @{ Key = "ShowMicrosoftRewards";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Oculta las Recompensas de Microsoft en Edge" }
-    "Barra lateral (Edge Sidebar)"        = @{ Key = "HubsSidebarEnabled";                    Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la barra lateral con apps de Edge" }
-    "Colecciones (Collections)"           = @{ Key = "EdgeCollectionsEnabled";                Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la funcion de Colecciones de Edge" }
-    "Juegos (Games menu)"                 = @{ Key = "AllowGamesMenu";                        Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el menu de juegos en Edge" }
-    "Mini menu al seleccionar texto"      = @{ Key = "MiniMenuEnabled";                       Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el mini menu flotante al seleccionar texto" }
-    "Drop (enviar archivos a ti mismo)"   = @{ Key = "EdgeEDropEnabled";                      Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la funcion Drop (enviarte archivos/notas)" }
-    "SmartScreen (filtro anti-phishing)"  = @{ Key = "SmartScreenEnabled";                    Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva SmartScreen (envio de URLs a Microsoft)" }
-    "SmartScreen para descargas"          = @{ Key = "SmartScreenForTrustedDownloadsEnabled"; Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva verificacion SmartScreen en descargas" }
-    "Bloqueo de scareware"                = @{ Key = "ScarewareBlockerProtectionEnabled";     Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el bloqueo de scareware de Edge" }
-    "Proteccion de contrasena (online)"   = @{ Key = "PasswordMonitorAllowed";                Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el monitoreo de contrasenas filtradas" }
+    "Copilot (IA integrada)"              = @{ Key = "Microsoft365CopilotChatIconEnabled";    Val = 0; Opp = 1; T = "DWord"; Desc = "Icono de Copilot en la barra de herramientas" }
+    "Copilot en barra de direcciones"     = @{ Key = "CopilotAddressBarSuggestionsEnabled";   Val = 0; Opp = 1; T = "DWord"; Desc = "Sugerencias de Copilot en la barra de URL" }
+    "IA generativa en busqueda"           = @{ Key = "GenAIDefaultSettings";                  Val = 2; Opp = 1; T = "DWord"; Desc = "Funciones generativas de IA en busqueda" }
+    "Feed de noticias (Nueva pestana)"    = @{ Key = "NewTabPageContentEnabled";              Val = 0; Opp = 1; T = "DWord"; Desc = "Feed de noticias y contenido de Microsoft en NTP" }
+    "Imagen del dia (fondo NTP)"          = @{ Key = "NewTabPageAllowedBackgroundTypes";      Val = 1; Opp = 0; T = "DWord"; Desc = "Imagen de fondo del dia en la pestana nueva" }
+    "Pantalla de bienvenida (1er inicio)" = @{ Key = "HideFirstRunExperience";                Val = 1; Opp = 0; T = "DWord"; Desc = "Experiencia de bienvenida al primer inicio" }
+    "Sugerencias trending en barra URL"   = @{ Key = "AddressBarTrendingSuggestEnabled";      Val = 0; Opp = 1; T = "DWord"; Desc = "Tendencias de Bing en la barra de direcciones" }
+    "Sugerencias Work Search (barra URL)" = @{ Key = "AddressBarWorkSearchResultsEnabled";    Val = 0; Opp = 1; T = "DWord"; Desc = "Resultados de busqueda laboral en barra URL" }
+    "Telemetria y datos de diagnostico"   = @{ Key = "DiagnosticData";                        Val = 0; Opp = 2; T = "DWord"; Desc = "Envio de datos de uso y diagnostico" }
+    "Personalizacion de anuncios/datos"   = @{ Key = "PersonalizationReportingEnabled";       Val = 0; Opp = 1; T = "DWord"; Desc = "Datos de navegacion para personalizar anuncios" }
+    "Actualizacion de componentes"        = @{ Key = "ComponentUpdatesEnabled";               Val = 0; Opp = 1; T = "DWord"; Desc = "Actualizacion automatica de componentes internos" }
+    "Mejorar busqueda/navegacion (datos)" = @{ Key = "SearchSuggestEnabled";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Sugerencias de busqueda (envian datos a Bing)" }
+    "Seguimiento de navegacion (Bing)"    = @{ Key = "ConfigureDoNotTrack";                   Val = 1; Opp = 0; T = "DWord"; Desc = "Do Not Track para todos los sitios" }
+    "Sincronizacion de navegacion"        = @{ Key = "SyncDisabled";                          Val = 1; Opp = 0; T = "DWord"; Desc = "Sincronizacion con cuenta Microsoft" }
+    "Autocompletar formularios"           = @{ Key = "AutofillAddressEnabled";                Val = 0; Opp = 1; T = "DWord"; Desc = "Autocompletado de direcciones" }
+    "Autocompletar tarjetas"              = @{ Key = "AutofillCreditCardEnabled";             Val = 0; Opp = 1; T = "DWord"; Desc = "Guardado de tarjetas de credito" }
+    "Historial de navegacion en sync"     = @{ Key = "SavingBrowserHistoryDisabled";          Val = 1; Opp = 0; T = "DWord"; Desc = "Guardado del historial de navegacion" }
+    "Perfil no removible (MSA)"           = @{ Key = "NonRemovableProfileEnabled";            Val = 0; Opp = 1; T = "DWord"; Desc = "Perfil no removible con cuenta Microsoft" }
+    "Forzar inicio de sesion"             = @{ Key = "BrowserSignin";                         Val = 0; Opp = 2; T = "DWord"; Desc = "Inicio de sesion en el navegador" }
+    "Compras y cupones (Shopping)"        = @{ Key = "EdgeShoppingAssistantEnabled";          Val = 0; Opp = 1; T = "DWord"; Desc = "Asistente de compras integrado de Edge" }
+    "Microsoft Rewards en Edge"           = @{ Key = "ShowMicrosoftRewards";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Recompensas de Microsoft en Edge" }
+    "Barra lateral (Edge Sidebar)"        = @{ Key = "HubsSidebarEnabled";                    Val = 0; Opp = 1; T = "DWord"; Desc = "Barra lateral con apps de Edge" }
+    "Colecciones (Collections)"           = @{ Key = "EdgeCollectionsEnabled";                Val = 0; Opp = 1; T = "DWord"; Desc = "Funcion de Colecciones de Edge" }
+    "Juegos (Games menu)"                 = @{ Key = "AllowGamesMenu";                        Val = 0; Opp = 1; T = "DWord"; Desc = "Menu de juegos en Edge" }
+    "Mini menu al seleccionar texto"      = @{ Key = "QuickSearchShowMiniMenu";               Val = 0; Opp = 1; T = "DWord"; Desc = "Mini menu flotante al seleccionar texto" }
+    "Drop (enviar archivos a ti mismo)"   = @{ Key = "EdgeEDropEnabled";                      Val = 0; Opp = 1; T = "DWord"; Desc = "Funcion Drop (enviarte archivos/notas)" }
+    "SmartScreen (filtro anti-phishing)"  = @{ Key = "SmartScreenEnabled";                    Val = 0; Opp = 1; T = "DWord"; Desc = "SmartScreen (envio de URLs a Microsoft)" }
+    "SmartScreen para descargas"          = @{ Key = "SmartScreenForTrustedDownloadsEnabled"; Val = 0; Opp = 1; T = "DWord"; Desc = "Verificacion SmartScreen en descargas" }
+    "Bloqueo de scareware"                = @{ Key = "ScarewareBlockerProtectionEnabled";     Val = 0; Opp = 1; T = "DWord"; Desc = "Bloqueo de scareware de Edge" }
+    "Proteccion de contrasena (online)"   = @{ Key = "PasswordMonitorAllowed";                Val = 0; Opp = 1; T = "DWord"; Desc = "Monitoreo de contrasenas filtradas" }
 }
 
 # ─── Estado en memoria ───────────────────────────────────────────────────────
-$script:state   = [ordered]@{}
+$script:state   = [ordered]@{}   # $true = caracteristica activada (toggle ON)
 $script:labels  = [ordered]@{}
 $script:toggles = [ordered]@{}
 $script:total   = $POLICIES.Count
@@ -119,9 +122,9 @@ function Get-PolicyState {
 }
 
 function Update-Counter {
-    $n = ($script:state.Values | Where-Object { $_ }).Count
-    $script:counter.Text = "$n / $script:total Desactivadas"
-    $script:counter.ForeColor = if ($n -gt 0) { $GREEN } else { $MUTED }
+    $off = ($script:state.Values | Where-Object { -not $_ }).Count
+    $script:counter.Text = "$off / $script:total a Desactivar"
+    $script:counter.ForeColor = if ($off -gt 0) { $ACCENT } else { $MUTED }
 }
 
 function Update-CurrentState {
@@ -129,14 +132,13 @@ function Update-CurrentState {
         $p = $POLICIES[$name]
         $cur = Get-PolicyState -Key $p.Key
         if ($cur -eq $p.Val) {
-            $script:state[$name] = $true
-            $script:labels[$name].ForeColor = $GREEN
-        } elseif ($null -eq $cur) {
+            # Ya esta desactivada en el registro -> toggle OFF
             $script:state[$name] = $false
-            $script:labels[$name].ForeColor = $FG
+            $script:labels[$name].ForeColor = $MUTED
         } else {
-            $script:state[$name] = $false
-            $script:labels[$name].ForeColor = $RED
+            # Activada (no configurada o valor activado) -> toggle ON
+            $script:state[$name] = $true
+            $script:labels[$name].ForeColor = $FG
         }
         $script:toggles[$name].Invalidate()
     }
@@ -146,25 +148,27 @@ function Update-CurrentState {
 function Invoke-PolicyToggle {
     param([string]$Name)
     $script:state[$Name] = -not $script:state[$Name]
-    $script:labels[$Name].ForeColor = if ($script:state[$Name]) { $GREEN } else { $FG }
+    $script:labels[$Name].ForeColor = if ($script:state[$Name]) { $FG } else { $MUTED }
     $script:toggles[$Name].Invalidate()
     Update-Counter
 }
 
 function Set-Policies {
-    $ok = 0; $fail = 0; $removed = 0
+    $disabled = 0; $fail = 0; $reenabled = 0
     foreach ($name in $POLICIES.Keys) {
         $p = $POLICIES[$name]
         $cur = Get-PolicyState -Key $p.Key
-        if ($script:state[$name]) {
-            try { Set-ItemProperty -Path $REG_PATH -Name $p.Key -Value $p.Val -Type $p.T -Force; $ok++ }
+        if (-not $script:state[$name]) {
+            # Toggle OFF -> desactivar caracteristica
+            try { Set-ItemProperty -Path $REG_PATH -Name $p.Key -Value $p.Val -Type $p.T -Force; $disabled++ }
             catch { $fail++ }
         } elseif ($cur -eq $p.Val) {
-            try { Remove-ItemProperty -Path $REG_PATH -Name $p.Key -Force -ErrorAction Stop; $removed++ }
+            # Toggle ON y estaba desactivada -> reactivar (quitar la politica)
+            try { Remove-ItemProperty -Path $REG_PATH -Name $p.Key -Force -ErrorAction Stop; $reenabled++ }
             catch { $fail++ }
         }
     }
-    return $ok, $fail, $removed
+    return $disabled, $fail, $reenabled
 }
 
 # ─── Helpers de UI ───────────────────────────────────────────────────────────
@@ -265,8 +269,8 @@ $lblSub.AutoSize  = $true
 $header.Controls.Add($lblSub)
 
 $script:counter = [Windows.Forms.Label]::new()
-$script:counter.Size      = [Drawing.Size]::new(170, 24)
-$script:counter.Location  = [Drawing.Point]::new($W_FORM - 186, 19)
+$script:counter.Size      = [Drawing.Size]::new(180, 24)
+$script:counter.Location  = [Drawing.Point]::new($W_FORM - 196, 19)
 $script:counter.Font      = $FONT_CNT
 $script:counter.ForeColor = $MUTED
 $script:counter.TextAlign = "MiddleRight"
@@ -303,7 +307,7 @@ $bannerLine.BackColor = $ACCENT
 $banner.Controls.Add($bannerLine)
 
 $bannerTitle = [Windows.Forms.Label]::new()
-$bannerTitle.Text      = "Marca las caracteristicas que quieres DESHABILITAR"
+$bannerTitle.Text      = "Apaga el interruptor de lo que quieras DESACTIVAR"
 $bannerTitle.Font      = $FONT_BTN
 $bannerTitle.ForeColor = $FG
 $bannerTitle.Location  = [Drawing.Point]::new(13, 7)
@@ -311,7 +315,7 @@ $bannerTitle.AutoSize  = $true
 $banner.Controls.Add($bannerTitle)
 
 $bannerSub = [Windows.Forms.Label]::new()
-$bannerSub.Text      = "Aplicar desactiva lo marcado; desmarcar y Aplicar lo reactiva"
+$bannerSub.Text      = "Todo viene activado por defecto. Apaga lo que no quieras y pulsa Aplicar"
 $bannerSub.Font      = $FONT_DESC
 $bannerSub.ForeColor = $MUTED
 $bannerSub.Location  = [Drawing.Point]::new(13, 25)
@@ -320,12 +324,13 @@ $banner.Controls.Add($bannerSub)
 
 $yGlobal += 44 + 8
 
-# ── Filas de politicas (listado unico) ──
+# ── Filas de caracteristicas (listado unico) ──
 $i = 0
 foreach ($name in $POLICIES.Keys) {
     $p = $POLICIES[$name]
     $rowBg = if (($i % 2) -eq 0) { $CARD } else { $CARD2 }
     $i++
+    $script:state[$name] = $true   # por defecto activada (ON)
 
     $row = [Windows.Forms.Panel]::new()
     $row.Size      = [Drawing.Size]::new($W_ROW, $H_ROW)
@@ -396,11 +401,11 @@ foreach ($name in $POLICIES.Keys) {
 
 # ── Botonera ──
 $btnY = 560; $btnH = 36
-$btnRefresh   = New-Button "Actualizar" 16  $btnY 92  $btnH
-$btnSelectAll = New-Button "Sel. todo"  116 $btnY 92  $btnH
-$btnClear     = New-Button "Limpiar"    216 $btnY 92  $btnH
-$btnApply     = New-Button "Aplicar"    316 $btnY 118 $btnH -Primary
-$form.Controls.AddRange(@($btnRefresh, $btnSelectAll, $btnClear, $btnApply))
+$btnRefresh    = New-Button "Actualizar"   16  $btnY 92  $btnH
+$btnEnableAll  = New-Button "Activar todo"  116 $btnY 92  $btnH
+$btnDisableAll = New-Button "Desact. todo"  216 $btnY 92  $btnH
+$btnApply      = New-Button "Aplicar"       316 $btnY 118 $btnH -Primary
+$form.Controls.AddRange(@($btnRefresh, $btnEnableAll, $btnDisableAll, $btnApply))
 
 # ── Barra de estado ──
 $script:status = [Windows.Forms.Label]::new()
@@ -415,26 +420,26 @@ $form.Controls.Add($script:status)
 Update-CurrentState
 
 # ── Eventos ──
-$btnSelectAll.Add_Click({
+$btnEnableAll.Add_Click({
     foreach ($n in @($script:state.Keys)) {
         $script:state[$n] = $true
-        $script:labels[$n].ForeColor = $GREEN
-        $script:toggles[$n].Invalidate()
-    }
-    Update-Counter
-    $script:status.ForeColor = $MUTED
-    $script:status.Text = "Todas las caracteristicas seleccionadas."
-})
-
-$btnClear.Add_Click({
-    foreach ($n in @($script:state.Keys)) {
-        $script:state[$n] = $false
         $script:labels[$n].ForeColor = $FG
         $script:toggles[$n].Invalidate()
     }
     Update-Counter
     $script:status.ForeColor = $MUTED
-    $script:status.Text = "Seleccion limpiada."
+    $script:status.Text = "Todas las caracteristicas activadas."
+})
+
+$btnDisableAll.Add_Click({
+    foreach ($n in @($script:state.Keys)) {
+        $script:state[$n] = $false
+        $script:labels[$n].ForeColor = $MUTED
+        $script:toggles[$n].Invalidate()
+    }
+    Update-Counter
+    $script:status.ForeColor = $MUTED
+    $script:status.Text = "Todas marcadas para desactivar."
 })
 
 $btnRefresh.Add_Click({
@@ -444,11 +449,11 @@ $btnRefresh.Add_Click({
 })
 
 $btnApply.Add_Click({
-    $ok, $fail, $removed = Set-Policies
+    $disabled, $fail, $reenabled = Set-Policies
     Update-CurrentState
-    $msg = "Aplicadas $ok politicas"
-    if ($removed -gt 0) { $msg += ", eliminadas $removed" }
-    if ($fail -gt 0)    { $msg += ", $fail errores" }
+    $msg = "$disabled desactivadas"
+    if ($reenabled -gt 0) { $msg += ", $reenabled reactivadas" }
+    if ($fail -gt 0)      { $msg += ", $fail errores" }
     $msg += ". Reinicia $BROWSER para que surtan efecto."
     $script:status.ForeColor = if ($fail -gt 0) { $RED } else { $GREEN }
     $script:status.Text = $msg

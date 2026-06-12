@@ -9,8 +9,9 @@ Herramienta gráfica de PowerShell para gestionar políticas del navegador Micro
 ## 🎯 Características
 
 - **Interfaz gráfica intuitiva** con tema oscuro moderno
-- **30 políticas organizadas en 7 categorías** para deshabilitar características de Edge
-- **Selección rápida** con opción "Seleccionar todo" y "Deseleccionar"
+- **30 características** para deshabilitar en Edge (listado único)
+- **Todos los interruptores activados por defecto**: apagas el de lo que quieras desactivar
+- **Acciones rápidas**: "Activar todo" y "Desactivar todo"
 - **Ejecución automática como administrador** cuando es necesario
 - **Feedback visual** con barra de estado y colores indicadores
 - **Ejecución directa desde GitHub** sin necesidad de descargar
@@ -60,7 +61,7 @@ powershell -ExecutionPolicy Bypass -File .\EdgeControl.ps1
 
 | Política | Descripción |
 |----------|-------------|
-| Copilot (IA integrada) | Desactiva el asistente Copilot de Edge |
+| Copilot (IA integrada) | Quita el icono de Copilot de la barra de herramientas |
 | Copilot en barra de direcciones | Elimina sugerencias de Copilot en la barra de URL |
 | IA generativa en búsqueda | Bloquea funciones generativas de IA en búsqueda |
 | Imagen del día (fondo NTP) | Desactiva la imagen de fondo del día en la pestaña nueva |
@@ -123,27 +124,24 @@ powershell -ExecutionPolicy Bypass -File .\EdgeControl.ps1
 
 ## 📖 Uso
 
-### Aplicar Políticas
+> Todos los interruptores vienen **activados** (estado por defecto del navegador). Apagas el de lo que quieras desactivar.
 
-1. Selecciona las características que deseas deshabilitar marcando las casillas
+### Desactivar características
+
+1. **Apaga** el interruptor de las características que quieras deshabilitar
 2. Haz clic en el botón **"Aplicar"**
 3. Reinicia el navegador Microsoft Edge para que los cambios surtan efecto
 
 ### Reactivar Características
 
-1. Desmarca las casillas de las características que deseas reactivar
-2. Haz clic en el botón **"Aplicar"**
+1. **Enciende** de nuevo el interruptor de lo que quieras volver a activar
+2. Haz clic en el botón **"Aplicar"** (elimina la política del registro)
 3. Reinicia el navegador Microsoft Edge para que los cambios surtan efecto
 
-### Seleccionar Todo
+### Activar / Desactivar todo
 
-1. Haz clic en el botón **"Sel. todo"** para marcar todas las casillas rápidamente
-2. Luego haz clic en **"Aplicar"** para desactivar todas las características
-
-### Deseleccionar Todo
-
-1. Haz clic en el botón **"Deselect."** para limpiar todas las selecciones
-2. Luego haz clic en **"Aplicar"** para reactivar todas las características
+- **"Activar todo"**: enciende todos los interruptores (estado por defecto)
+- **"Desactivar todo"**: los apaga todos (debloat completo); luego pulsa **"Aplicar"**
 
 ### Actualizar Estado
 
