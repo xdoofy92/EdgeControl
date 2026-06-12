@@ -10,7 +10,7 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     if (-not $PSCommandPath) {
         $url = "https://raw.githubusercontent.com/xdoofy92/EdgeControl/main/EdgeControl.ps1"
         $scriptContent = Invoke-RestMethod -Uri $url
-        $tempFile = [System.IO.Path]::GetTempFileName() + ".ps1"
+        $tempFile = Join-Path $env:TEMP "EdgeControl_$([guid]::NewGuid().ToString('N')).ps1"
         $scriptContent | Out-File $tempFile -Encoding UTF8
         Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$tempFile`""
         exit
@@ -53,19 +53,19 @@ $GROUPS = [ordered]@{
         "Copilot (IA integrada)"              = @{ Key = "CopilotEnabled";                           Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el asistente Copilot de Edge" }
         "Copilot en barra de direcciones"     = @{ Key = "CopilotAddressBarSuggestionsEnabled";      Val = 0; Opp = 1; T = "DWord"; Desc = "Elimina sugerencias de Copilot en la barra de URL" }
         "IA generativa en busqueda"           = @{ Key = "GenAIDefaultSettings";                     Val = 2; Opp = 1; T = "DWord"; Desc = "Bloquea funciones generativas de IA en busqueda" }
-        "Imagen de pestaña nueva con IA"      = @{ Key = "NewTabPageContentEnabled";                 Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el contenido dinamico generado por IA en NTP" }
+        "Imagen del dia (fondo NTP)"          = @{ Key = "NewTabPageAllowedBackgroundTypes";         Val = 1; Opp = 0; T = "DWord"; Desc = "Desactiva la imagen de fondo del dia en la pestana nueva" }
     }
 
     "Nueva pestana y contenido" = [ordered]@{
-        "Feed de noticias (Nueva pestana)"    = @{ Key = "NewTabPageAllowedBackgroundTypes";         Val = 3; Opp = 1; T = "DWord"; Desc = "Bloquea el feed de noticias y contenido promocional" }
-        "Contenido promovido (NTP)"           = @{ Key = "HideFirstRunExperience";                   Val = 1; Opp = 0; T = "DWord"; Desc = "Oculta la experiencia de bienvenida al primer inicio" }
+        "Feed de noticias (Nueva pestana)"    = @{ Key = "NewTabPageContentEnabled";                 Val = 0; Opp = 1; T = "DWord"; Desc = "Bloquea el feed de noticias y contenido de Microsoft en NTP" }
+        "Pantalla de bienvenida (1er inicio)" = @{ Key = "HideFirstRunExperience";                   Val = 1; Opp = 0; T = "DWord"; Desc = "Oculta la experiencia de bienvenida al primer inicio" }
         "Sugerencias trending en barra URL"   = @{ Key = "AddressBarTrendingSuggestEnabled";         Val = 0; Opp = 1; T = "DWord"; Desc = "Elimina tendencias de Bing en la barra de direcciones" }
         "Sugerencias Work Search (barra URL)" = @{ Key = "AddressBarWorkSearchResultsEnabled";       Val = 0; Opp = 1; T = "DWord"; Desc = "Elimina resultados de busqueda laboral en barra URL" }
     }
 
     "Telemetria y diagnostico" = [ordered]@{
         "Telemetria y datos de diagnostico"   = @{ Key = "DiagnosticData";                           Val = 0; Opp = 2; T = "DWord"; Desc = "Desactiva el envio de datos de uso y diagnostico" }
-        "Informes de errores del navegador"   = @{ Key = "SendSiteInfoToImproveServices";            Val = 0; Opp = 1; T = "DWord"; Desc = "No envia informacion de sitios a Microsoft" }
+        "Personalizacion de anuncios/datos"   = @{ Key = "PersonalizationReportingEnabled";          Val = 0; Opp = 1; T = "DWord"; Desc = "No envia datos de navegacion para personalizar anuncios/servicios" }
         "Actualizacion de componentes"        = @{ Key = "ComponentUpdatesEnabled";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Bloquea la actualizacion automatica de componentes internos" }
         "Mejorar busqueda/navegacion (datos)" = @{ Key = "SearchSuggestEnabled";                     Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva sugerencias de busqueda (envian datos a Bing)" }
     }
@@ -79,7 +79,7 @@ $GROUPS = [ordered]@{
     }
 
     "Inicio de sesion y cuentas" = [ordered]@{
-        "Inicio de sesion automatico (MSA)"   = @{ Key = "NonRemovableProfileEnabled";               Val = 0; Opp = 1; T = "DWord"; Desc = "Evita perfiles no removibles con cuenta Microsoft" }
+        "Perfil no removible (MSA)"           = @{ Key = "NonRemovableProfileEnabled";               Val = 0; Opp = 1; T = "DWord"; Desc = "Evita perfiles no removibles con cuenta Microsoft" }
         "Forzar inicio de sesion"             = @{ Key = "BrowserSignin";                            Val = 0; Opp = 2; T = "DWord"; Desc = "Desactiva el inicio de sesion en el navegador" }
         "Compras y cupones (Shopping)"        = @{ Key = "EdgeShoppingAssistantEnabled";             Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el asistente de compras integrado de Edge" }
         "Microsoft Rewards en Edge"           = @{ Key = "ShowMicrosoftRewards";                     Val = 0; Opp = 1; T = "DWord"; Desc = "Oculta las Recompensas de Microsoft en Edge" }
@@ -88,16 +88,15 @@ $GROUPS = [ordered]@{
     "Funciones innecesarias" = [ordered]@{
         "Barra lateral (Edge Sidebar)"        = @{ Key = "HubsSidebarEnabled";                      Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la barra lateral con apps de Edge" }
         "Colecciones (Collections)"           = @{ Key = "EdgeCollectionsEnabled";                   Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la funcion de Colecciones de Edge" }
-        "Modo Immersive Reader"               = @{ Key = "ImmersiveReaderGrammarToolsEnabled";       Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva las herramientas gramaticales del lector" }
         "Juegos (Games menu)"                 = @{ Key = "AllowGamesMenu";                           Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el menu de juegos en Edge" }
         "Mini menu al seleccionar texto"      = @{ Key = "MiniMenuEnabled";                          Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el mini menu flotante al seleccionar texto" }
-        "Drop (archivos en Edge)"             = @{ Key = "EdgeFollowEnabled";                        Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la funcion Follow/Drop de Edge" }
+        "Drop (enviar archivos a ti mismo)"   = @{ Key = "EdgeEDropEnabled";                         Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva la funcion Drop (enviarte archivos/notas)" }
     }
 
     "Seguridad y SmartScreen" = [ordered]@{
         "SmartScreen (filtro anti-phishing)"  = @{ Key = "SmartScreenEnabled";                       Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva SmartScreen (envio de URLs a Microsoft)" }
         "SmartScreen para descargas"          = @{ Key = "SmartScreenForTrustedDownloadsEnabled";    Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva verificacion SmartScreen en descargas" }
-        "Bloqueo de scareware"                = @{ Key = "ScarewireBlockerEnabled";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el bloqueo de scareware de Edge" }
+        "Bloqueo de scareware"                = @{ Key = "ScarewareBlockerProtectionEnabled";        Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el bloqueo de scareware de Edge" }
         "Proteccion de contrasena (online)"   = @{ Key = "PasswordMonitorAllowed";                   Val = 0; Opp = 1; T = "DWord"; Desc = "Desactiva el monitoreo de contrasenas filtradas" }
     }
 }

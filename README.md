@@ -9,7 +9,7 @@ Herramienta gráfica de PowerShell para gestionar políticas del navegador Micro
 ## 🎯 Características
 
 - **Interfaz gráfica intuitiva** con tema oscuro moderno
-- **33 políticas organizadas en 7 categorías** para deshabilitar características de Edge
+- **30 políticas organizadas en 7 categorías** para deshabilitar características de Edge
 - **Selección rápida** con opción "Seleccionar todo" y "Deseleccionar"
 - **Ejecución automática como administrador** cuando es necesario
 - **Feedback visual** con barra de estado y colores indicadores
@@ -63,14 +63,14 @@ powershell -ExecutionPolicy Bypass -File .\EdgeControl.ps1
 | Copilot (IA integrada) | Desactiva el asistente Copilot de Edge |
 | Copilot en barra de direcciones | Elimina sugerencias de Copilot en la barra de URL |
 | IA generativa en búsqueda | Bloquea funciones generativas de IA en búsqueda |
-| Imagen de pestaña nueva con IA | Desactiva el contenido dinámico generado por IA en NTP |
+| Imagen del día (fondo NTP) | Desactiva la imagen de fondo del día en la pestaña nueva |
 
 ### Nueva pestaña y contenido
 
 | Política | Descripción |
 |----------|-------------|
-| Feed de noticias (Nueva pestaña) | Bloquea el feed de noticias y contenido promocional |
-| Contenido promovido (NTP) | Oculta la experiencia de bienvenida al primer inicio |
+| Feed de noticias (Nueva pestaña) | Bloquea el feed de noticias y contenido de Microsoft en NTP |
+| Pantalla de bienvenida (1er inicio) | Oculta la experiencia de bienvenida al primer inicio |
 | Sugerencias trending en barra URL | Elimina tendencias de Bing en la barra de direcciones |
 | Sugerencias Work Search (barra URL) | Elimina resultados de búsqueda laboral en barra URL |
 
@@ -79,7 +79,7 @@ powershell -ExecutionPolicy Bypass -File .\EdgeControl.ps1
 | Política | Descripción |
 |----------|-------------|
 | Telemetría y datos de diagnóstico | Desactiva el envío de datos de uso y diagnóstico |
-| Informes de errores del navegador | No envía información de sitios a Microsoft |
+| Personalización de anuncios/datos | No envía datos de navegación para personalizar anuncios/servicios |
 | Actualización de componentes | Bloquea la actualización automática de componentes internos |
 | Mejorar búsqueda/navegación (datos) | Desactiva sugerencias de búsqueda (envían datos a Bing) |
 
@@ -97,7 +97,7 @@ powershell -ExecutionPolicy Bypass -File .\EdgeControl.ps1
 
 | Política | Descripción |
 |----------|-------------|
-| Inicio de sesión automático (MSA) | Evita perfiles no removibles con cuenta Microsoft |
+| Perfil no removible (MSA) | Evita perfiles no removibles con cuenta Microsoft |
 | Forzar inicio de sesión | Desactiva el inicio de sesión en el navegador |
 | Compras y cupones (Shopping) | Desactiva el asistente de compras integrado de Edge |
 | Microsoft Rewards en Edge | Oculta las Recompensas de Microsoft en Edge |
@@ -108,10 +108,9 @@ powershell -ExecutionPolicy Bypass -File .\EdgeControl.ps1
 |----------|-------------|
 | Barra lateral (Edge Sidebar) | Desactiva la barra lateral con apps de Edge |
 | Colecciones (Collections) | Desactiva la función de Colecciones de Edge |
-| Modo Immersive Reader | Desactiva las herramientas gramaticales del lector |
 | Juegos (Games menu) | Desactiva el menú de juegos en Edge |
 | Mini menú al seleccionar texto | Desactiva el mini menú flotante al seleccionar texto |
-| Drop (archivos en Edge) | Desactiva la función Follow/Drop de Edge |
+| Drop (enviar archivos a ti mismo) | Desactiva la función Drop (enviarte archivos/notas) |
 
 ### Seguridad y SmartScreen
 
