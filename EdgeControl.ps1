@@ -416,7 +416,7 @@ Update-CurrentState
 
 # ── Eventos ──
 $btnSelectAll.Add_Click({
-    foreach ($n in $script:state.Keys) {
+    foreach ($n in @($script:state.Keys)) {
         $script:state[$n] = $true
         $script:labels[$n].ForeColor = $GREEN
         $script:toggles[$n].Invalidate()
@@ -427,7 +427,7 @@ $btnSelectAll.Add_Click({
 })
 
 $btnClear.Add_Click({
-    foreach ($n in $script:state.Keys) {
+    foreach ($n in @($script:state.Keys)) {
         $script:state[$n] = $false
         $script:labels[$n].ForeColor = $FG
         $script:toggles[$n].Invalidate()
