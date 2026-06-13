@@ -65,7 +65,9 @@ $X_TOG = $W_ROW - $TOG_W - 12
 $X_TXT = 14
 $W_TXT = $X_TOG - $X_TXT - 10
 
-if (-not (Test-Path $REG_PATH)) { New-Item $REG_PATH -Force | Out-Null }
+# Nota: NO creamos $REG_PATH al arrancar. La clave se crea solo cuando se aplica
+# alguna politica (ver Set-Policies). Asi, tras pulsar "Default" la clave queda
+# realmente eliminada y Edge no muestra "Administrado por su organizacion".
 
 # ─── Caracteristicas (listado unico, estilo debloat) ─────────────────────────
 # Logica: el toggle refleja el estado de la caracteristica.
@@ -184,6 +186,7 @@ function Set-Policies {
         $cur = Get-PolicyState -Key $primary.Key
         if (-not $script:state[$name]) {
             # Toggle OFF -> desactivar caracteristica (todas sus claves)
+            if (-not (Test-Path $REG_PATH)) { New-Item $REG_PATH -Force | Out-Null }
             try {
                 foreach ($k in $keys) { Set-ItemProperty -Path $REG_PATH -Name $k.Key -Value $k.Val -Type $k.T -Force }
                 $disabled++
@@ -400,11 +403,11 @@ foreach ($name in $POLICIES.Keys) {
 
 # ── Botonera ──
 $btnY = 560; $btnH = 36
-$btnRefresh    = New-Button "Actualizar"   16  $btnY 92  $btnH
+$btnDefault    = New-Button "Default"      16  $btnY 92  $btnH
 $btnEnableAll  = New-Button "Activar todo"  116 $btnY 92  $btnH
 $btnDisableAll = New-Button "Desact. todo"  216 $btnY 92  $btnH
 $btnApply      = New-Button "Aplicar"       316 $btnY 118 $btnH -Primary
-$form.Controls.AddRange(@($btnRefresh, $btnEnableAll, $btnDisableAll, $btnApply))
+$form.Controls.AddRange(@($btnDefault, $btnEnableAll, $btnDisableAll, $btnApply))
 
 # ── Barra de estado ──
 $script:status = [Windows.Forms.Label]::new()
@@ -441,10 +444,18 @@ $btnDisableAll.Add_Click({
     $script:status.Text = "Todas marcadas para desactivar."
 })
 
-$btnRefresh.Add_Click({
-    Update-CurrentState
-    $script:status.ForeColor = $MUTED
-    $script:status.Text = "Estado actualizado desde el registro."
+$btnDefault.Add_Click({
+    # Elimina por completo la clave de politicas de Edge -> vuelve todo a sus
+    # valores predeterminados y Edge deja de aparecer "Administrado por su organizacion".
+    try {
+        if (Test-Path $REG_PATH) { Remove-Item $REG_PATH -Recurse -Force -ErrorAction Stop }
+        Update-CurrentState
+        $script:status.ForeColor = $GREEN
+        $script:status.Text = "Politicas eliminadas. Reinicia $BROWSER; ya no saldra administrado por su organizacion."
+    } catch {
+        $script:status.ForeColor = $RED
+        $script:status.Text = "No se pudieron eliminar las politicas: $($_.Exception.Message)"
+    }
 })
 
 $btnApply.Add_Click({
