@@ -73,8 +73,17 @@ if (-not (Test-Path $REG_PATH)) { New-Item $REG_PATH -Force | Out-Null }
 #   OFF (gris)  = se desactivara al pulsar Aplicar  -> escribe Val en el registro
 # Formato: Nombre = @{ Key; Val=valor desactivado; Opp=valor activado; T=tipo; Desc }
 $POLICIES = [ordered]@{
-    "Copilot (IA integrada)"              = @{ Key = "Microsoft365CopilotChatIconEnabled";    Val = 0; Opp = 1; T = "DWord"; Desc = "Icono de Copilot en la barra de herramientas" }
-    "Copilot en barra de direcciones"     = @{ Key = "CopilotAddressBarSuggestionsEnabled";   Val = 0; Opp = 1; T = "DWord"; Desc = "Sugerencias de Copilot en la barra de URL" }
+    # Copilot: las politicas dedicadas (Microsoft365CopilotChatIconEnabled, etc.) SOLO aplican
+    # a perfiles Entra ID (cuenta de trabajo/escuela), NO a cuentas Microsoft personales (MSA).
+    # La unica clave que quita Copilot/Discover con cuenta personal es HubsSidebarEnabled = 0
+    # (la barra lateral es donde vive Copilot). Por eso este toggle escribe varias claves a la vez.
+    "Copilot (IA integrada)"              = @{ Desc = "Quita Copilot/Discover (barra lateral, barra URL y nueva pestana)"; KeySet = @(
+        @{ Key = "HubsSidebarEnabled";                  Val = 0; Opp = 1; T = "DWord" }   # MSA + Entra: oculta la barra lateral con Copilot
+        @{ Key = "Microsoft365CopilotChatIconEnabled";  Val = 0; Opp = 1; T = "DWord" }   # solo Entra: icono Copilot en barra de herramientas
+        @{ Key = "CopilotAddressBarSuggestionsEnabled"; Val = 0; Opp = 1; T = "DWord" }   # solo Entra: sugerencias Copilot en barra URL
+        @{ Key = "CopilotPageContext";                  Val = 0; Opp = 1; T = "DWord" }   # solo Entra: acceso de Copilot al contenido de la pagina
+        @{ Key = "CopilotNewTabPageEnabled";            Val = 0; Opp = 1; T = "DWord" }   # solo Entra: pagina de nueva pestana de Copilot
+    ) }
     "IA generativa en busqueda"           = @{ Key = "GenAIDefaultSettings";                  Val = 2; Opp = 1; T = "DWord"; Desc = "Funciones generativas de IA en busqueda" }
     "Feed de noticias (Nueva pestana)"    = @{ Key = "NewTabPageContentEnabled";              Val = 0; Opp = 1; T = "DWord"; Desc = "Feed de noticias y contenido de Microsoft en NTP" }
     "Imagen del dia (fondo NTP)"          = @{ Key = "NewTabPageAllowedBackgroundTypes";      Val = 1; Opp = 0; T = "DWord"; Desc = "Imagen de fondo del dia en la pestana nueva" }
@@ -94,7 +103,6 @@ $POLICIES = [ordered]@{
     "Forzar inicio de sesion"             = @{ Key = "BrowserSignin";                         Val = 0; Opp = 2; T = "DWord"; Desc = "Inicio de sesion en el navegador" }
     "Compras y cupones (Shopping)"        = @{ Key = "EdgeShoppingAssistantEnabled";          Val = 0; Opp = 1; T = "DWord"; Desc = "Asistente de compras integrado de Edge" }
     "Microsoft Rewards en Edge"           = @{ Key = "ShowMicrosoftRewards";                  Val = 0; Opp = 1; T = "DWord"; Desc = "Recompensas de Microsoft en Edge" }
-    "Barra lateral (Edge Sidebar)"        = @{ Key = "HubsSidebarEnabled";                    Val = 0; Opp = 1; T = "DWord"; Desc = "Barra lateral con apps de Edge" }
     "Colecciones (Collections)"           = @{ Key = "EdgeCollectionsEnabled";                Val = 0; Opp = 1; T = "DWord"; Desc = "Funcion de Colecciones de Edge" }
     "Juegos (Games menu)"                 = @{ Key = "AllowGamesMenu";                        Val = 0; Opp = 1; T = "DWord"; Desc = "Menu de juegos en Edge" }
     "Mini menu al seleccionar texto"      = @{ Key = "QuickSearchShowMiniMenu";               Val = 0; Opp = 1; T = "DWord"; Desc = "Mini menu flotante al seleccionar texto" }
@@ -121,6 +129,19 @@ function Get-PolicyState {
     return $null
 }
 
+# Normaliza una politica a una lista de claves de registro.
+# Soporta el formato simple (Key/Val/Opp/T) y el multi-clave (KeySet = @(...)).
+# Nota: el campo se llama KeySet y no "Keys" porque .Keys colisiona con la propiedad
+# nativa de las hashtables (devolveria los nombres de los campos, no el array).
+# La primera clave es la "primaria": determina el estado mostrado en el toggle.
+function Get-PolicyKeys {
+    param($p)
+    # El operador coma (,) evita que PowerShell desenvuelva un array de un solo
+    # elemento al devolverlo (en cuyo caso [0] daria $null en el caso simple).
+    if ($p.Contains('KeySet')) { return ,@($p['KeySet']) }
+    return ,@(@{ Key = $p.Key; Val = $p.Val; Opp = $p.Opp; T = $p.T })
+}
+
 function Update-Counter {
     $off = ($script:state.Values | Where-Object { -not $_ }).Count
     $script:counter.Text = "$off / $script:total a Desactivar"
@@ -130,8 +151,9 @@ function Update-Counter {
 function Update-CurrentState {
     foreach ($name in $POLICIES.Keys) {
         $p = $POLICIES[$name]
-        $cur = Get-PolicyState -Key $p.Key
-        if ($cur -eq $p.Val) {
+        $primary = (Get-PolicyKeys $p)[0]
+        $cur = Get-PolicyState -Key $primary.Key
+        if ($cur -eq $primary.Val) {
             # Ya esta desactivada en el registro -> toggle OFF
             $script:state[$name] = $false
             $script:labels[$name].ForeColor = $MUTED
@@ -157,15 +179,22 @@ function Set-Policies {
     $disabled = 0; $fail = 0; $reenabled = 0
     foreach ($name in $POLICIES.Keys) {
         $p = $POLICIES[$name]
-        $cur = Get-PolicyState -Key $p.Key
+        $keys = Get-PolicyKeys $p
+        $primary = $keys[0]
+        $cur = Get-PolicyState -Key $primary.Key
         if (-not $script:state[$name]) {
-            # Toggle OFF -> desactivar caracteristica
-            try { Set-ItemProperty -Path $REG_PATH -Name $p.Key -Value $p.Val -Type $p.T -Force; $disabled++ }
-            catch { $fail++ }
-        } elseif ($cur -eq $p.Val) {
-            # Toggle ON y estaba desactivada -> reactivar (quitar la politica)
-            try { Remove-ItemProperty -Path $REG_PATH -Name $p.Key -Force -ErrorAction Stop; $reenabled++ }
-            catch { $fail++ }
+            # Toggle OFF -> desactivar caracteristica (todas sus claves)
+            try {
+                foreach ($k in $keys) { Set-ItemProperty -Path $REG_PATH -Name $k.Key -Value $k.Val -Type $k.T -Force }
+                $disabled++
+            } catch { $fail++ }
+        } elseif ($cur -eq $primary.Val) {
+            # Toggle ON y estaba desactivada -> reactivar (quitar todas sus claves)
+            # SilentlyContinue: en multi-clave algunas pueden no existir y no debe contar como error
+            try {
+                foreach ($k in $keys) { Remove-ItemProperty -Path $REG_PATH -Name $k.Key -Force -ErrorAction SilentlyContinue }
+                $reenabled++
+            } catch { $fail++ }
         }
     }
     return $disabled, $fail, $reenabled
@@ -333,9 +362,10 @@ foreach ($name in $POLICIES.Keys) {
     $row.Controls.Add($tog)
     $script:toggles[$name] = $tog
 
+    $keyList = ((Get-PolicyKeys $p) | ForEach-Object { $_.Key }) -join ", "
     $tt = [Windows.Forms.ToolTip]::new()
-    $tt.SetToolTip($lbl,  "Clave: $($p.Key)")
-    $tt.SetToolTip($desc, "Clave: $($p.Key)")
+    $tt.SetToolTip($lbl,  "Clave: $keyList")
+    $tt.SetToolTip($desc, "Clave: $keyList")
 
     # Click -> alternar
     $capture = $name
