@@ -1,4 +1,4 @@
-﻿# EdgeControl - Gestor grafico de politicas de Microsoft Edge via registro de Windows
+# EdgeControl - Gestor grafico de politicas de Microsoft Edge via registro de Windows
 # Autor: Daniel Rodriguez | https://xdoofy92.com
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
