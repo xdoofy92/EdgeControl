@@ -298,17 +298,17 @@ $logo.Add_Paint({
     $g.SmoothingMode = [Drawing.Drawing2D.SmoothingMode]::AntiAlias
     $d  = [float]([math]::Min($s.Width, $s.Height) - 2)
     $rectF = [Drawing.RectangleF]::new(1, 1, $d, $d)
-    # Esfera con degradado azul -> cian (colores de Edge)
-    $c1 = [Drawing.Color]::FromArgb(12, 90, 196)    # azul
-    $c2 = [Drawing.Color]::FromArgb(64, 209, 245)   # cian
-    $lg = New-Object Drawing.Drawing2D.LinearGradientBrush ($rectF, $c1, $c2, [float]35)
+    # Cuerpo: esfera azul profundo
+    $lg = New-Object Drawing.Drawing2D.LinearGradientBrush ($rectF, [Drawing.Color]::FromArgb(13, 71, 161), [Drawing.Color]::FromArgb(20, 108, 196), [float]60)
     $g.FillEllipse($lg, $rectF)
-    # Recorte en forma de media luna (la "ola" caracteristica de Edge)
-    $cb  = New-Object Drawing.SolidBrush ($s.BackColor)
-    $off = $d * 0.34
-    $cd  = $d * 1.02
-    $g.FillEllipse($cb, 1 + $off, 1 - $off * 0.55, $cd, $cd)
-    $lg.Dispose(); $cb.Dispose()
+    # "Ola" cian-verde inferior-derecha (recortada a la esfera) -> aspecto de Edge
+    $clip = New-Object Drawing.Drawing2D.GraphicsPath; $clip.AddEllipse($rectF)
+    $sv = $g.Save(); $g.SetClip($clip)
+    $wr = [Drawing.RectangleF]::new(1 + $d * 0.02, 1 + $d * 0.40, $d * 1.45, $d * 1.2)
+    $wg = New-Object Drawing.Drawing2D.LinearGradientBrush ($wr, [Drawing.Color]::FromArgb(34, 190, 230), [Drawing.Color]::FromArgb(70, 225, 180), [float]25)
+    $g.FillEllipse($wg, $wr)
+    $g.Restore($sv); $g.ResetClip()
+    $lg.Dispose(); $wg.Dispose(); $clip.Dispose()
 })
 $header.Controls.Add($logo)
 
