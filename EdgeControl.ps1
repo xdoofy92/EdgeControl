@@ -113,6 +113,15 @@ $POLICIES = [ordered]@{
     "SmartScreen para descargas"          = @{ Key = "SmartScreenForTrustedDownloadsEnabled"; Val = 0; Opp = 1; T = "DWord"; Desc = "Verificacion SmartScreen en descargas" }
     "Bloqueo de scareware"                = @{ Key = "ScarewareBlockerProtectionEnabled";     Val = 0; Opp = 1; T = "DWord"; Desc = "Bloqueo de scareware de Edge" }
     "Proteccion de contrasena (online)"   = @{ Key = "PasswordMonitorAllowed";                Val = 0; Opp = 1; T = "DWord"; Desc = "Monitoreo de contrasenas filtradas" }
+    # ── Telemetria y privacidad adicionales ──
+    "Servicio de experimentacion"         = @{ Key = "ExperimentationAndConfigurationServiceControl"; Val = 0; Opp = 2; T = "DWord"; Desc = "Conexion al servicio de experimentos/configuracion de Microsoft" }
+    "Comentarios/Feedback (diagnostico)"  = @{ Key = "UserFeedbackAllowed";                   Val = 0; Opp = 1; T = "DWord"; Desc = "Envio de comentarios y diagnosticos a Microsoft" }
+    "Recomendaciones y Spotlight"         = @{ Key = "SpotlightExperiencesAndRecommendationsEnabled"; Val = 0; Opp = 1; T = "DWord"; Desc = "Experiencias y recomendaciones de Microsoft" }
+    "Inicio rapido en segundo plano"      = @{ Key = "StartupBoostEnabled";                   Val = 0; Opp = 1; T = "DWord"; Desc = "Edge sigue en segundo plano para arrancar mas rapido" }
+    "Barra/Widget web de Edge"            = @{ Key = "WebWidgetAllowed";                       Val = 0; Opp = 1; T = "DWord"; Desc = "Barra web (widget) de Edge con Bing" }
+    "Prediccion de red (prefetch)"        = @{ Key = "NetworkPredictionOptions";               Val = 2; Opp = 0; T = "DWord"; Desc = "Precarga de paginas y resolucion DNS anticipada" }
+    "Bloquear cookies de terceros"        = @{ Key = "BlockThirdPartyCookies";                 Val = 1; Opp = 0; T = "DWord"; Desc = "Bloquea cookies de seguimiento de terceros" }
+    "Consulta de metodos de pago"         = @{ Key = "PaymentMethodQueryEnabled";              Val = 0; Opp = 1; T = "DWord"; Desc = "Permite a los sitios saber si tienes pagos guardados" }
 }
 
 # ─── Estado en memoria ───────────────────────────────────────────────────────

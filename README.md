@@ -10,7 +10,7 @@
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?style=for-the-badge&logo=powershell&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)
-![Edge](https://img.shields.io/badge/Edge-30_interruptores-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)
+![Edge](https://img.shields.io/badge/Edge-36_interruptores-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)
 ![License](https://img.shields.io/badge/Licencia-MIT-3DA639?style=for-the-badge)
 
 </div>
@@ -38,7 +38,7 @@ La app refleja el **estado real** de cada característica con un interruptor est
 | 🟢 **Encendido** | verde, texto normal | La característica está **activa** (valor por defecto del navegador) |
 | ⚪ **Apagado** | gris, texto atenuado | Se **desactivará** al pulsar **Aplicar** (escribe la política en el registro) |
 
-El contador de la cabecera (**`0 / 30 a Desactivar`**) te dice cuántas tienes marcadas para apagar. Al pulsar **Aplicar**, los cambios se guardan en:
+El contador de la cabecera (**`0 / 36 a Desactivar`**) te dice cuántas tienes marcadas para apagar. Al pulsar **Aplicar**, los cambios se guardan en:
 
 ```
 HKLM:\SOFTWARE\Policies\Microsoft\Edge
@@ -59,14 +59,13 @@ HKLM:\SOFTWARE\Policies\Microsoft\Edge
 
 ## 🧩 Características que puedes desactivar
 
-> 30 interruptores en un único listado, todos encendidos por defecto. Aquí los agrupamos por tema para que sea más fácil de leer.
+> 36 interruptores en un único listado, todos encendidos por defecto. Aquí los agrupamos por tema para que sea más fácil de leer.
 
 ### 🤖 IA y Copilot
 
-| Característica | Qué apaga | Clave de registro |
+| Característica | Qué apaga | Clave(s) de registro |
 |:--------------|:----------|:------------------|
-| Copilot (IA integrada) | Icono de Copilot en la barra de herramientas | `Microsoft365CopilotChatIconEnabled` |
-| Copilot en barra de direcciones | Sugerencias de Copilot en la barra de URL | `CopilotAddressBarSuggestionsEnabled` |
+| Copilot (IA integrada) | Copilot/Discover: barra lateral, barra de URL y nueva pestaña | `HubsSidebarEnabled`, `Microsoft365CopilotChatIconEnabled`, `CopilotAddressBarSuggestionsEnabled`, `CopilotPageContext`, `CopilotNewTabPageEnabled` |
 | IA generativa en búsqueda | Funciones generativas de IA en búsqueda | `GenAIDefaultSettings` |
 | Imagen del día (fondo NTP) | Imagen de fondo del día en la pestaña nueva | `NewTabPageAllowedBackgroundTypes` |
 
@@ -84,6 +83,8 @@ HKLM:\SOFTWARE\Policies\Microsoft\Edge
 | Característica | Qué apaga | Clave de registro |
 |:--------------|:----------|:------------------|
 | Telemetría y diagnóstico | Envío de datos de uso y diagnóstico | `DiagnosticData` |
+| Servicio de experimentación | Conexión al servicio de experimentos/configuración de Microsoft | `ExperimentationAndConfigurationServiceControl` |
+| Comentarios/Feedback (diagnóstico) | Envío de comentarios y diagnósticos a Microsoft | `UserFeedbackAllowed` |
 | Personalización de anuncios | Datos de navegación para personalizar anuncios | `PersonalizationReportingEnabled` |
 | Actualización de componentes | Actualización automática de componentes internos | `ComponentUpdatesEnabled` |
 | Mejorar búsqueda/navegación | Sugerencias de búsqueda (envían datos a Bing) | `SearchSuggestEnabled` |
@@ -96,6 +97,9 @@ HKLM:\SOFTWARE\Policies\Microsoft\Edge
 | Sincronización | Sincronización con cuenta Microsoft | `SyncDisabled` |
 | Autocompletar formularios | Autocompletado de direcciones | `AutofillAddressEnabled` |
 | Autocompletar tarjetas | Guardado de tarjetas de crédito | `AutofillCreditCardEnabled` |
+| Consulta de métodos de pago | Permite a los sitios saber si tienes pagos guardados | `PaymentMethodQueryEnabled` |
+| Bloquear cookies de terceros | Bloquea las cookies de seguimiento de terceros | `BlockThirdPartyCookies` |
+| Predicción de red (prefetch) | Precarga de páginas y resolución DNS anticipada | `NetworkPredictionOptions` |
 | Historial en sync | Guardado del historial de navegación | `SavingBrowserHistoryDisabled` |
 
 ### 👤 Inicio de sesión y cuentas
@@ -111,11 +115,13 @@ HKLM:\SOFTWARE\Policies\Microsoft\Edge
 
 | Característica | Qué apaga | Clave de registro |
 |:--------------|:----------|:------------------|
-| Barra lateral (Sidebar) | Barra lateral con apps de Edge | `HubsSidebarEnabled` |
 | Colecciones | Función de Colecciones | `EdgeCollectionsEnabled` |
 | Juegos (Games menu) | Menú de juegos | `AllowGamesMenu` |
 | Mini menú al seleccionar | Mini menú flotante al seleccionar texto | `QuickSearchShowMiniMenu` |
 | Drop | Enviarte archivos/notas a ti mismo | `EdgeEDropEnabled` |
+| Recomendaciones y Spotlight | Experiencias y recomendaciones de Microsoft | `SpotlightExperiencesAndRecommendationsEnabled` |
+| Inicio rápido en segundo plano | Edge sigue en segundo plano para arrancar más rápido | `StartupBoostEnabled` |
+| Barra/Widget web de Edge | Barra web (widget) de Edge con Bing | `WebWidgetAllowed` |
 
 ### 🔒 Seguridad y SmartScreen
 
