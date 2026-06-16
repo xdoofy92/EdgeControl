@@ -287,17 +287,36 @@ $header.Location  = [Drawing.Point]::new(0, 0)
 $header.BackColor = $CARD
 $form.Controls.Add($header)
 
-$accentBar = [Windows.Forms.Panel]::new()
-$accentBar.Size      = [Drawing.Size]::new(4, 34)
-$accentBar.Location  = [Drawing.Point]::new(16, 14)
-$accentBar.BackColor = $ACCENT
-$header.Controls.Add($accentBar)
+# ── Logo de Microsoft Edge dibujado con GDI+ (swirl azul-cian, sin dependencias) ──
+$logo = [Windows.Forms.Panel]::new()
+$logo.Size      = [Drawing.Size]::new(36, 36)
+$logo.Location  = [Drawing.Point]::new(16, 13)
+$logo.BackColor = $CARD
+$logo.Add_Paint({
+    param($s, $e)
+    $g = $e.Graphics
+    $g.SmoothingMode = [Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $d  = [float]([math]::Min($s.Width, $s.Height) - 2)
+    $rectF = [Drawing.RectangleF]::new(1, 1, $d, $d)
+    # Esfera con degradado azul -> cian (colores de Edge)
+    $c1 = [Drawing.Color]::FromArgb(12, 90, 196)    # azul
+    $c2 = [Drawing.Color]::FromArgb(64, 209, 245)   # cian
+    $lg = New-Object Drawing.Drawing2D.LinearGradientBrush ($rectF, $c1, $c2, [float]35)
+    $g.FillEllipse($lg, $rectF)
+    # Recorte en forma de media luna (la "ola" caracteristica de Edge)
+    $cb  = New-Object Drawing.SolidBrush ($s.BackColor)
+    $off = $d * 0.34
+    $cd  = $d * 1.02
+    $g.FillEllipse($cb, 1 + $off, 1 - $off * 0.55, $cd, $cd)
+    $lg.Dispose(); $cb.Dispose()
+})
+$header.Controls.Add($logo)
 
 $lblTitle = [Windows.Forms.Label]::new()
 $lblTitle.Text      = $APP_NAME
 $lblTitle.Font      = $FONT_TITLE
 $lblTitle.ForeColor = $FG
-$lblTitle.Location  = [Drawing.Point]::new(28, 8)
+$lblTitle.Location  = [Drawing.Point]::new(60, 8)
 $lblTitle.AutoSize  = $true
 $header.Controls.Add($lblTitle)
 
@@ -305,7 +324,7 @@ $lblSub = [Windows.Forms.Label]::new()
 $lblSub.Text      = $APP_SUB
 $lblSub.Font      = $FONT_SUB
 $lblSub.ForeColor = $MUTED
-$lblSub.Location  = [Drawing.Point]::new(30, 39)
+$lblSub.Location  = [Drawing.Point]::new(62, 39)
 $lblSub.AutoSize  = $true
 $header.Controls.Add($lblSub)
 
