@@ -28,6 +28,7 @@ Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 $REG_PATH  = "HKLM:\SOFTWARE\Policies\Microsoft\Edge"
 $APP_TITLE = "EdgeControl - dprojects.org"
 $APP_NAME  = "EdgeControl"
+$APP_VER   = "v1.0"
 $APP_SUB   = "Politicas de Microsoft Edge via registro"
 $BROWSER   = "Microsoft Edge"
 
@@ -43,9 +44,9 @@ $MUTED    = [Drawing.Color]::FromArgb(140, 140, 150)
 $GREEN    = [Drawing.Color]::FromArgb(86, 196, 138)
 $RED      = [Drawing.Color]::FromArgb(232, 100, 100)
 $TOG_OFF  = [Drawing.Color]::FromArgb(62, 62, 72)
-$ACCENT   = [Drawing.Color]::FromArgb(0, 120, 212)     # Azul Edge
-$ACC_HOV  = [Drawing.Color]::FromArgb(28, 140, 232)
-$ACC_DWN  = [Drawing.Color]::FromArgb(0, 99, 177)
+$ACCENT   = [Drawing.Color]::FromArgb(0, 158, 160)     # Verdeazul (teal) del logo de Edge
+$ACC_HOV  = [Drawing.Color]::FromArgb(26, 182, 184)
+$ACC_DWN  = [Drawing.Color]::FromArgb(0, 132, 134)
 
 # ─── Tipografias ─────────────────────────────────────────────────────────────
 $FONT_TITLE = [Drawing.Font]::new("Segoe UI", 15, [Drawing.FontStyle]::Bold)
@@ -304,6 +305,14 @@ $lblTitle.ForeColor = $FG
 $lblTitle.Location  = [Drawing.Point]::new(60, 8)
 $lblTitle.AutoSize  = $true
 $header.Controls.Add($lblTitle)
+
+$lblVer = [Windows.Forms.Label]::new()
+$lblVer.Text      = $APP_VER
+$lblVer.Font      = $FONT_SUB
+$lblVer.ForeColor = $ACCENT
+$lblVer.AutoSize  = $true
+$lblVer.Location  = [Drawing.Point]::new(60 + $lblTitle.PreferredWidth + 6, 16)
+$header.Controls.Add($lblVer)
 
 $lblSub = [Windows.Forms.Label]::new()
 $lblSub.Text      = $APP_SUB
